@@ -1,2 +1,11 @@
 # cuda-acceleration-showcase
-* This will be used to show the acceleration speedups between CPU, Naive GPU and optimised GPU Python code.
+**Objective of Repo**
+* Show why GPU acceleration matters
+**CUDA Concepts Demonstrated**
+* Threads, blocks, grids
+* Global vs shared memory
+* Coalesced memory access
+* Minimizing host/device transfers
+**Key Takeaways**
+* GPU performance shines with highly parallel workloads
+* Better memory management → exponential speed gains
