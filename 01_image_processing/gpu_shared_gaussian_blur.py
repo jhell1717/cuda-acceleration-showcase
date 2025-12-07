@@ -77,6 +77,6 @@ def compare_gaussian_blur(img):
     cuda.synchronize()
     end_gpu = time.time()
 
-    print(f"GPU Shared-Memory Blur:   {end_gpu - start_gpu:.5f} sec")
+    print(f"GPU Shared-Memory Blur took:   {end_gpu - start_gpu:.5f} sec")
 
     return d_output.copy_to_host()
