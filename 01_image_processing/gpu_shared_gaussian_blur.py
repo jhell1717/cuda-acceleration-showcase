@@ -24,7 +24,7 @@ def gaussian_blur_shared(input_img, output_img, kernel):
     k_half = k_size // 2
 
     # Shared memory tile with halo
-    shared = cuda.shared.array(shape=(16+4, 16+4), dtype=float32)
+    shared = cuda.shared.array(shape=(16+4, 16+4), dtype=np.float32)
 
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y
