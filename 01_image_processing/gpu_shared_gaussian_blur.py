@@ -57,34 +57,26 @@ def gaussian_blur_shared(input_img, output_img, kernel):
         output_img[x, y] = val
 
 
-# def compare_gaussian_blur(img):
-#     img = img.astype(np.float32)
+def compare_gaussian_blur(img):
+    img = img.astype(np.float32)
 
-#     # CPU (OpenCV) Timing
-#     start_cpu = time.time()
-#     cpu_blur = cv2.GaussianBlur(img, (5, 5), 0)
-#     end_cpu = time.time()
+    # GPU Setup
+    d_input = cuda.to_device(img)
+    d_output = cuda.device_array_like(img)
+    d_kernel = cuda.to_device(GAUSSIAN_KERNEL)
 
-#     # GPU Setup
-#     d_input = cuda.to_device(img)
-#     d_output = cuda.device_array_like(img)
-#     d_kernel = cuda.to_device(GAUSSIAN_KERNEL)
+    threads_per_block = (16, 16)
+    blocks_per_grid = (
+        (img.shape[0] + 15) // 16,
+        (img.shape[1] + 15) // 16
+    )
 
-#     threads_per_block = (16, 16)
-#     blocks_per_grid = (
-#         (img.shape[0] + 15) // 16,
-#         (img.shape[1] + 15) // 16
-#     )
+    # GPU Timing
+    start_gpu = time.time()
+    gaussian_blur_shared[blocks_per_grid, threads_per_block](d_input, d_output, d_kernel)
+    cuda.synchronize()
+    end_gpu = time.time()
 
-#     # GPU Timing
-#     start_gpu = time.time()
-#     gaussian_blur_shared[blocks_per_grid, threads_per_block](d_input, d_output, d_kernel)
-#     cuda.synchronize()
-#     end_gpu = time.time()
+    print(f"GPU Shared-Memory Blur:   {end_gpu - start_gpu:.5f} sec")
 
-#     print("\nPerformance Comparison:")
-#     print(f"CPU OpenCV Gaussian Blur:  {end_cpu - start_cpu:.5f} sec")
-#     print(f"GPU Shared-Memory Blur:   {end_gpu - start_gpu:.5f} sec")
-#     print(f"Speedup: {(end_cpu - start_cpu)/(end_gpu - start_gpu):.2f}x")
-
-#     return cpu_blur, d_output.copy_to_host()
+    return d_output.copy_to_host()
