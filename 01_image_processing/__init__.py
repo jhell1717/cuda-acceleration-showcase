@@ -1,2 +1,3 @@
 from cpu_gaussian_blur import load_image
 from gpu_gaussian_blur import gpu_gaussian_blur
+from gpu_shared_gaussian_blur import gpu_shared_gaussian_blur
