@@ -4,6 +4,7 @@ import cv2
 import time
 from numba import cuda, float32
 
+# kernel filter.
 GAUSSIAN_KERNEL = np.array([
     [1, 4, 6, 4, 1],
     [4, 16, 24, 16, 4],
@@ -13,9 +14,10 @@ GAUSSIAN_KERNEL = np.array([
 ], dtype=np.float32)
 GAUSSIAN_KERNEL /= GAUSSIAN_KERNEL.sum()  # normalize kernel
 
+# Standard GPU acceleration without memory allocation.
 @cuda.jit
 def gaussian_blur_kernel(input_img,out_img,kernel):
-    x,y, = cuda.grid(2)
+    x,y, = cuda.grid(2) # gets thread index in x and y direction.
 
     height = input_img.shape[0]
     width = input_img.shape[1]
@@ -40,7 +42,7 @@ def gpu_gaussian_blur(img):
     d_output = cuda.device_array_like(img)
     d_kernel = cuda.to_device(GAUSSIAN_KERNEL)
 
-    threads_per_block = (16,16)
+    threads_per_block = (32,32)
     blocks_per_grid =(
         (img.shape[0] + threads_per_block[0] -1) // threads_per_block[0],
         (img.shape[1] + threads_per_block[1] -1) // threads_per_block[1]
