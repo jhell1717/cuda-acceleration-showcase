@@ -1,0 +1,28 @@
+from numba import cuda
+import numpy as np
+
+
+
+@cuda.jit
+def matrix_multiply_kernel(A, B, C):
+    """CUDA kernel for matrix multiplication C = A @ B"""
+    x, y = cuda.grid(2)
+    
+    if x < C.shape[0] and y < C.shape[1]:
+        val = 0.0
+        for i in range(A.shape[1]):
+            val += A[x, i] * B[i, y]
+        C[x, y] = val
+
+def gpu_matrix_multiply(A, B):
+    A = A.astype(np.float32)
+    B = B.astype(np.float32)
+
+    d_A = cuda.to_device(A)
+    d_B = cuda.to_device(B)
+    d_C = cuda.device_array((A.shape[0], B.shape[1]), dtype=np.float32)
+
+    threads_per_block = (16, 16)
+    blocks_per_grid = (
+        (A.shape[0] + threads_per_block[0] - 1) // threads_per_block[0],
+        (B.shape[1] + threads_per_block[1] - 1) // threads_per_block[1])
