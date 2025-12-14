@@ -1,4 +1,4 @@
-from numba import cuda
+from numba import cuda, vectorize
 import numpy as np
 import time
 
@@ -34,3 +34,9 @@ def gpu_matrix_multiply(A, B):
     end = time.time()
 
     print(f'GPU Matrix Multiplicatoin Time: {end-start} seconds')
+
+
+
+@vectorize(['float32(float32,float32)'],device='cuda')
+def matrix_gpu(A,B):
+    return A*B
