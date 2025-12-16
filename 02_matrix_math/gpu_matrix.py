@@ -37,6 +37,6 @@ def gpu_matrix_multiply(A, B):
 
 
 
-@vectorize(['float32(float32,float32)'],device='cuda')
+@vectorize(['float32(float32,float32)'],target='cuda')
 def matrix_gpu(A,B):
     return A*B
