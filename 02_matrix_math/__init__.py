@@ -1,0 +1,2 @@
+from cpu_matrix import cpu_matrix_multiply
+from gpu_matrix import gpu_matrix_multiply, matrix_gpu

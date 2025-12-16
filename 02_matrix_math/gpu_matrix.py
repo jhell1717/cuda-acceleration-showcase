@@ -33,7 +33,7 @@ def gpu_matrix_multiply(A, B):
     cuda.synchronize()
     end = time.time()
 
-    print(f'GPU Matrix Multiplicatoin Time: {end-start} seconds')
+    print(f'GPU Matrix Multiplication Time: {end-start} seconds')
 
 
 
