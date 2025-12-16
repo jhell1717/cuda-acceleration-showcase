@@ -39,4 +39,8 @@ def gpu_matrix_multiply(A, B):
 
 @vectorize(['float32(float32,float32)'],target='cuda')
 def matrix_gpu(A,B):
-    return A*B
+    start = time.time()
+    result = A*B
+    end = time.time()
+    print(f'GPU Matrix Multiplication (@vectorize) Time: {end-start} seconds')
+    return result
