@@ -15,9 +15,6 @@ def matrix_multiply_kernel(A, B, C):
         C[x, y] = val
 
 def gpu_matrix_multiply(A, B):
-    A = A.astype(np.float32)
-    B = B.astype(np.float32)
-
     d_A = cuda.to_device(A)
     d_B = cuda.to_device(B)
     #Specify dimensions to match original image.
