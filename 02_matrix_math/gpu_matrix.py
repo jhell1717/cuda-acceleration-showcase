@@ -14,7 +14,7 @@ def matrix_multiply_kernel(A, B, C):
             val += A[x, i] * B[i, y]
         C[x, y] = val
 
-def gpu_matrix_multiply(A, B):
+def gpu_matrix_multiply(A, B,threads_per_block=16):
     d_A = cuda.to_device(A)
     d_B = cuda.to_device(B)
     #Specify dimensions to match original image.
